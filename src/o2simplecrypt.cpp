@@ -220,7 +220,7 @@ QByteArray O0SimpleCrypt::decryptToByteArray(QByteArray cypher)
 
     ba = ba.mid(2);
     int pos(0);
-    int cnt(ba.length());
+    qsizetype cnt(ba.length());
     char lastChar = 0;
 
     while (pos < cnt) {
