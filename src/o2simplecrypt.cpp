@@ -136,7 +136,7 @@ QByteArray O0SimpleCrypt::encryptToByteArray(QByteArray plaintext)
     int pos(0);
     char lastChar(0);
 
-    int cnt = ba.length();
+    qsizetype cnt = ba.length();
 
     while (pos < cnt) {
         ba[pos] = ba.at(pos) ^ m_keyParts.at(pos % 8) ^ lastChar;
