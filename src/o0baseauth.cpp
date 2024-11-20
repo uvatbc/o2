@@ -110,7 +110,7 @@ int O0BaseAuth::localPort() {
 
 void O0BaseAuth::setLocalPort(int value) {
     qDebug() << "O0BaseAuth::setLocalPort:" << value;
-    localPort_ = value;
+    localPort_ = (quint16)value;
     Q_EMIT localPortChanged();
 }
 
