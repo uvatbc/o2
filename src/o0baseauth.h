@@ -20,6 +20,12 @@ class O0_EXPORT O0BaseAuth : public QObject
 {
     Q_OBJECT
 public:
+    enum class LogLevel
+    {
+        Debug,
+        Warning,
+        Critical
+    };
     explicit O0BaseAuth(QObject *parent = 0, O0AbstractStore *store = 0);
 
 public:
@@ -74,6 +80,14 @@ public:
 
     /// Construct query string from list of headers
     static QByteArray createQueryParameters(const QList<O0RequestParameter> &parameters);
+
+    /// Sets a custom logging function to use instead of the default qDebug()/qWarning() mechanism
+    static void setLoggingFunction( std::function<void( const QString&, LogLevel level ) > function );
+
+    /// Logs a message
+    ///
+    /// This will default to using qDebug/qWarning, unless a custom logger function has been registered
+    static void log( const QString& message, LogLevel level = LogLevel::Debug );
 
 public Q_SLOTS:
     /// Authenticate.
@@ -145,6 +159,7 @@ protected:
     QVariantMap extraTokens_;
     bool useExternalWebInterceptor_;
     QByteArray replyContent_;
+    static std::function<void( const QString&, LogLevel level ) > sLoggingFunction;
 
 private:
     O2ReplyServer *replyServer_;

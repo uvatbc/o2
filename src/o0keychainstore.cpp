@@ -2,6 +2,7 @@
 // Created by michaelpollind on 3/13/17.
 //
 #include "o0keychainstore.h"
+#include "o0baseauth.h"
 
 #include <QDebug>
 #include <keychain.h>
@@ -72,8 +73,9 @@ int o0keyChainStore::executeJob(QKeychain::Job &job, const char *actionName) con
 
     const QKeychain::Error errorCode = job.error();
     if (errorCode != QKeychain::NoError) {
-        qWarning() << "keychain store could not" << actionName << name_ << ":"
-                   << job.errorString() << "(" << errorCode << ").";
+        O0BaseAuth::log( QStringLiteral("keychain store could not %1 %2: %3 (%4)").arg(
+                            actionName, name_, job.errorString() )
+                            .arg( errorCode ), O0BaseAuth::LogLevel::Warning );
     }
     return errorCode;
 }
