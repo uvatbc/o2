@@ -71,4 +71,10 @@ const char O2_AUTHORIZATION_CODE[] = "authorization_code";
 const char O2_HTTP_HTTP_HEADER[] = "HTTP";
 const char O2_HTTP_AUTHORIZATION_HEADER[] = "Authorization";
 
+// PKCE parameters
+const char O2_OAUTH2_PKCE_CODE_VERIFIER_PARAM[] = "code_verifier";
+const char O2_OAUTH2_PKCE_CODE_CHALLENGE_PARAM[] = "code_challenge";
+const char O2_OAUTH2_PKCE_CODE_CHALLENGE_METHOD_S256[] = "S256";
+const char O2_OAUTH2_PKCE_CODE_CHALLENGE_METHOD_PARAM[] = "code_challenge_method";
+
 #endif // O0GLOBALS_H

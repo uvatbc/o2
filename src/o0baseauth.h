@@ -157,6 +157,8 @@ protected:
     quint16 localPort_;
     O0AbstractStore *store_;
     QVariantMap extraTokens_;
+    QByteArray pkceCodeVerifier_;
+    QString pkceCodeChallenge_;
     bool useExternalWebInterceptor_;
     QByteArray replyContent_;
     static std::function<void( const QString&, LogLevel level ) > sLoggingFunction;
