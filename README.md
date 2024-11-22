@@ -1,5 +1,8 @@
 # OAuth 1.0 and 2.0 for Qt
 
+*This repository is a fork of the upstream o2 library from https://github.com/pipacs/o2, with patches from QGIS applied
+on top of the base library version*
+
 This library encapsulates the OAuth 1.0 and 2.0 client authentication flows, and the sending of authenticated HTTP requests.
 
 The primary target is Qt Quick applications on embedded devices.
