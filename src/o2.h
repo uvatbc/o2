@@ -165,6 +165,9 @@ protected:
     /// Set token expiration time.
     void setExpires(int v);
 
+    /// Returns the QNetworkAccessManager instance to use for network access
+    virtual QNetworkAccessManager *getManager();
+
     /// Start polling authorization server
     void startPollServer(const QVariantMap &params);
 

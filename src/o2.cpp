@@ -256,7 +256,7 @@ void O2::link() {
         QUrl url(tokenUrl_);
         QNetworkRequest tokenRequest(url);
         tokenRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        QNetworkReply *tokenReply = manager_->post(tokenRequest, payload);
+        QNetworkReply *tokenReply = getManager()->post(tokenRequest, payload);
 
         connect(tokenReply, SIGNAL(finished()), this, SLOT(onTokenReplyFinished()), Qt::QueuedConnection);
 #if QT_VERSION < 0x051500
@@ -274,7 +274,7 @@ void O2::link() {
         QUrl url(requestUrl_);
         QNetworkRequest deviceRequest(url);
         deviceRequest.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
-        QNetworkReply *tokenReply = manager_->post(deviceRequest, payload);
+        QNetworkReply *tokenReply = getManager()->post(deviceRequest, payload);
 
         connect(tokenReply, SIGNAL(finished()), this, SLOT(onDeviceAuthReplyFinished()), Qt::QueuedConnection);
 #if QT_VERSION < 0x051500
@@ -326,7 +326,7 @@ void O2::onVerificationReceived(const QMap<QString, QString> response) {
 
         qDebug() << QString("O2::onVerificationReceived: Exchange access code data:\n%1").arg(QString(data));
 
-        QNetworkReply *tokenReply = manager_->post(tokenRequest, data);
+        QNetworkReply *tokenReply = getManager()->post(tokenRequest, data);
         timedReplies_.add(tokenReply);
         connect(tokenReply, SIGNAL(finished()), this, SLOT(onTokenReplyFinished()), Qt::QueuedConnection);
 #if QT_VERSION < 0x051500
@@ -461,6 +461,11 @@ void O2::setExpires(int v) {
     store_->setValue(key, QString::number(v));
 }
 
+QNetworkAccessManager *O2::getManager()
+{
+    return manager_;
+}
+
 void O2::startPollServer(const QVariantMap &params)
 {
     bool ok = false;
@@ -488,7 +493,7 @@ void O2::startPollServer(const QVariantMap &params)
     parameters.append(O0RequestParameter(O2_OAUTH2_GRANT_TYPE, grantType.toUtf8()));
     QByteArray payload = O0BaseAuth::createQueryParameters(parameters);
 
-    O2PollServer * pollServer = new O2PollServer(manager_, authRequest, payload, expiresIn, this);
+    O2PollServer * pollServer = new O2PollServer(getManager(), authRequest, payload, expiresIn, this);
     if (params.contains(O2_OAUTH2_INTERVAL)) {
         int interval = params[O2_OAUTH2_INTERVAL].toInt(&ok);
         if (ok)
@@ -534,7 +539,7 @@ void O2::refresh() {
     parameters.insert(O2_OAUTH2_GRANT_TYPE, O2_OAUTH2_REFRESH_TOKEN);
 
     QByteArray data = buildRequestBody(parameters);
-    QNetworkReply *refreshReply = manager_->post(refreshRequest, data);
+    QNetworkReply *refreshReply = getManager()->post(refreshRequest, data);
     timedReplies_.add(refreshReply);
     connect(refreshReply, SIGNAL(finished()), this, SLOT(onRefreshFinished()), Qt::QueuedConnection);
 #if QT_VERSION < 0x051500
