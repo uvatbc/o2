@@ -1,5 +1,6 @@
 #include <QDataStream>
 #include <QDebug>
+#include <QIODevice>
 #include <QUrlQuery>
 
 #include "o0baseauth.h"
