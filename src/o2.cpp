@@ -554,20 +554,29 @@ void O2::onRefreshFinished() {
     if (refreshReply->error() == QNetworkReply::NoError) {
         QByteArray reply = refreshReply->readAll();
         QVariantMap tokens = parseJsonResponse(reply);
-        setToken(tokens.value(O2_OAUTH2_ACCESS_TOKEN).toString());
-        setExpires((int)(QDateTime::currentMSecsSinceEpoch() / 1000 + tokens.value(O2_OAUTH2_EXPIRES_IN).toInt()));
-        QString refreshToken = tokens.value(O2_OAUTH2_REFRESH_TOKEN).toString();
-        if(!refreshToken.isEmpty()) {
-            setRefreshToken(refreshToken);
+        if ( tokens.contains(QStringLiteral("error")) ) {
+          log( QStringLiteral(" Error refreshing token %1" ).arg( tokens.value(QStringLiteral("error")).toMap().value(QStringLiteral("message")).toString().toLocal8Bit().constData() ) );
+          unlink();
+          timedReplies_.remove(refreshReply);
+          Q_EMIT refreshFinished(QNetworkReply::NoError);
         }
-        else {
-            qDebug() << "No new refresh token. Keep the old one.";
+        else
+        {
+          setToken(tokens.value(O2_OAUTH2_ACCESS_TOKEN).toString());
+          setExpires((int)(QDateTime::currentMSecsSinceEpoch() / 1000 + tokens.value(O2_OAUTH2_EXPIRES_IN).toInt()));
+          QString refreshToken = tokens.value(O2_OAUTH2_REFRESH_TOKEN).toString();
+          if(!refreshToken.isEmpty()) {
+              setRefreshToken(refreshToken);
+          }
+          else {
+              log( QStringLiteral("No new refresh token. Keep the old one.") );
+          }
+          timedReplies_.remove(refreshReply);
+          setLinked(true);
+          Q_EMIT linkingSucceeded();
+          Q_EMIT refreshFinished(QNetworkReply::NoError);
+          log( QStringLiteral(" New token expires in %1 seconds").arg( expires() ) );
         }
-        timedReplies_.remove(refreshReply);
-        setLinked(true);
-        Q_EMIT linkingSucceeded();
-        Q_EMIT refreshFinished(QNetworkReply::NoError);
-        qDebug() << " New token expires in" << expires() << "seconds";
     } else {
         log( QStringLiteral( "O2::onRefreshFinished: Error %1 %2" ).arg( (int)refreshReply->error() ).arg( refreshReply->errorString() ) );
     }
