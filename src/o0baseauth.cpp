@@ -113,7 +113,7 @@ int O0BaseAuth::localPort() {
 
 void O0BaseAuth::setLocalPort(int value) {
     log( QStringLiteral( "O0BaseAuth::setLocalPort:" ).arg( value ) );
-    localPort_ = value;
+    localPort_ = static_cast<quint16>(value);
     Q_EMIT localPortChanged();
 }
 
