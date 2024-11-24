@@ -90,12 +90,12 @@ QString O1::signatureMethod() {
 }
 
 void O1::setSignatureMethod(const QString &value) {
-    qDebug() << "O1::setSignatureMethod: " << value;
+    log( QStringLiteral( "O1::setSignatureMethod: %1" ).arg( value ) );
     signatureMethod_ = value;
 }
 
 void O1::unlink() {
-    qDebug() << "O1::unlink";
+    log( QStringLiteral( "O1::unlink" ) );
     setLinked(false);
     setToken("");
     setTokenSecret("");
@@ -211,7 +211,7 @@ QByteArray O1::generateSignature(const QList<O0RequestParameter> headers, const 
 }
 
 void O1::link() {
-    qDebug() << "O1::link";
+    log( QStringLiteral( "O1::link" ) );
 
     // Create the reply server if it doesn't exist
     // and we don't use an external web interceptor
@@ -274,9 +274,9 @@ void O1::link() {
     headers.append(O0RequestParameter(O2_OAUTH_VERSION, "1.0"));
     headers.append(O0RequestParameter(O2_OAUTH_SIGNATURE_METHOD, signatureMethod().toLatin1()));
     headers.append(O0RequestParameter(O2_OAUTH_SIGNATURE, generateSignature(headers, request, requestParameters(), QNetworkAccessManager::PostOperation)));
-    qDebug() << "O1:link: Token request headers:";
+    log( QStringLiteral( "O1:link: Token request headers:" ) );
     foreach(param, headers) {
-        qDebug() << "  " << param.name << "=" << param.value;
+        log( QStringLiteral( "  %1=%2" ).arg( param.name, param.value ) );
     }
 
     // Clear request token

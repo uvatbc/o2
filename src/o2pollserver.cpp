@@ -3,6 +3,7 @@
 
 #include "o2pollserver.h"
 #include "o0jsonresponse.h"
+#include "o0baseauth.h"
 
 static QMap<QString, QString> toVerificationParams(const QVariantMap &map)
 {
@@ -53,7 +54,7 @@ void O2PollServer::startPolling()
 
 void O2PollServer::onPollTimeout()
 {
-    qDebug() << "O2PollServer::onPollTimeout: retrying";
+    O0BaseAuth::log( QStringLiteral( "O2PollServer::onPollTimeout: retrying" ) );
     QNetworkReply * reply = manager_->post(request_, payload_);
     connect(reply, SIGNAL(finished()), this, SLOT(onReplyFinished()));
 }
@@ -69,7 +70,7 @@ void O2PollServer::onReplyFinished()
     QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
 
     if (!reply) {
-        qDebug() << "O2PollServer::onReplyFinished: reply is null";
+        O0BaseAuth::log( QStringLiteral( "O2PollServer::onReplyFinished: reply is null" ) );
         return;
     }
 

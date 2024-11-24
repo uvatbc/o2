@@ -1,6 +1,5 @@
 #include <cassert>
 
-#include <QDebug>
 #include <QTimer>
 #include <QBuffer>
 #if QT_VERSION >= 0x050000
@@ -182,7 +181,7 @@ int O2Requestor::head(const QNetworkRequest &req, int timeout/* = 60*1000*/)
 
 void O2Requestor::onRefreshFinished(QNetworkReply::NetworkError error) {
     if (status_ != Requesting) {
-        qWarning() << "O2Requestor::onRefreshFinished: No pending request";
+        O0BaseAuth::log( QStringLiteral("O2Requestor::onRefreshFinished: No pending request"), O0BaseAuth::LogLevel::Warning );
         return;
     }
     if (QNetworkReply::NoError == error) {
@@ -206,7 +205,7 @@ void O2Requestor::onRequestFinished() {
 }
 
 void O2Requestor::onRequestError(QNetworkReply::NetworkError error) {
-    qWarning() << "O2Requestor::onRequestError: Error" << (int)error;
+    O0BaseAuth::log( QStringLiteral("O2Requestor::onRequestError: Error %1").arg( error ), O0BaseAuth::LogLevel::Warning );
     if (status_ == Idle) {
         return;
     }
@@ -214,13 +213,13 @@ void O2Requestor::onRequestError(QNetworkReply::NetworkError error) {
         return;
     }
     int httpStatus = reply_->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
-    qWarning() << "O2Requestor::onRequestError: HTTP status" << httpStatus << reply_->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString();
+    O0BaseAuth::log( QStringLiteral("O2Requestor::onRequestError: HTTP status %1 %2").arg( httpStatus ).arg( reply_->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toString()), O0BaseAuth::LogLevel::Warning );
     if ((status_ == Requesting) && (httpStatus == 401)) {
         // Call O2::refresh. Note the O2 instance might live in a different thread
         if (QMetaObject::invokeMethod(authenticator_, "refresh")) {
             return;
         }
-        qCritical() << "O2Requestor::onRequestError: Invoking remote refresh failed";
+        O0BaseAuth::log( QStringLiteral( "O2Requestor::onRequestError: Invoking remote refresh failed" ), O0BaseAuth::LogLevel::Critical );
     }
     error_ = error;
     QTimer::singleShot(10, this, SLOT(finish()));
@@ -228,7 +227,7 @@ void O2Requestor::onRequestError(QNetworkReply::NetworkError error) {
 
 void O2Requestor::onUploadProgress(qint64 uploaded, qint64 total) {
     if (status_ == Idle) {
-        qWarning() << "O2Requestor::onUploadProgress: No pending request";
+        O0BaseAuth::log( QStringLiteral("O2Requestor::onUploadProgress: No pending request"), O0BaseAuth::LogLevel::Warning );
         return;
     }
     if (reply_ != qobject_cast<QNetworkReply *>(sender())) {
@@ -245,7 +244,7 @@ int O2Requestor::setup(const QNetworkRequest &req, QNetworkAccessManager::Operat
     static int currentId;
 
     if (status_ != Idle) {
-        qWarning() << "O2Requestor::setup: Another request pending";
+        O0BaseAuth::log( QStringLiteral("O2Requestor::setup: Another request pending"), O0BaseAuth::LogLevel::Warning );
         return -1;
     }
 
@@ -284,7 +283,7 @@ int O2Requestor::setup(const QNetworkRequest &req, QNetworkAccessManager::Operat
 void O2Requestor::finish() {
     QByteArray data;
     if (status_ == Idle) {
-        qWarning() << "O2Requestor::finish: No pending request";
+        O0BaseAuth::log( QStringLiteral("O2Requestor::finish: No pending request"), O0BaseAuth::LogLevel::Warning );
         return;
     }
     data = reply_->readAll();
@@ -301,7 +300,7 @@ void O2Requestor::finish() {
 
 void O2Requestor::retry() {
     if (status_ != Requesting) {
-        qWarning() << "O2Requestor::retry: No pending request";
+        O0BaseAuth::log( QStringLiteral("O2Requestor::retry: No pending request"), O0BaseAuth::LogLevel::Warning );
         return;
     }
     timedReplies_.remove(reply_);

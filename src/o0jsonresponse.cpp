@@ -1,7 +1,7 @@
 #include "o0jsonresponse.h"
+#include "o0baseauth.h"
 
 #include <QByteArray>
-#include <QDebug>
 #if QT_VERSION >= 0x050000
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -15,12 +15,12 @@ QVariantMap parseJsonResponse(const QByteArray &data) {
     QJsonParseError err;
     QJsonDocument doc = QJsonDocument::fromJson(data, &err);
     if (err.error != QJsonParseError::NoError) {
-        qWarning() << "parseTokenResponse: Failed to parse token response due to err:" << err.errorString();
+        O0BaseAuth::log( QStringLiteral("parseTokenResponse: Failed to parse token response due to err: %1").arg( err.errorString() ), O0BaseAuth::LogLevel::Warning );
         return QVariantMap();
     }
 
     if (!doc.isObject()) {
-        qWarning() << "parseTokenResponse: Token response is not an object";
+        O0BaseAuth::log( QStringLiteral("parseTokenResponse: Token response is not an object"), O0BaseAuth::LogLevel::Warning );
         return QVariantMap();
     }
 
