@@ -8,6 +8,7 @@
 
 /// Storage for strings.
 class O0_EXPORT O0AbstractStore: public QObject {
+    Q_OBJECT
 
 public:
     explicit O0AbstractStore(QObject *parent = 0): QObject(parent) {
