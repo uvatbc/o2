@@ -278,7 +278,7 @@ void O1::link() {
     headers.append(O0RequestParameter(O2_OAUTH_SIGNATURE, generateSignature(headers, request, requestParameters(), QNetworkAccessManager::PostOperation)));
     log( QStringLiteral( "O1:link: Token request headers:" ) );
     for(const O0RequestParameter &param: qAsConst(headers)) {
-        log( QStringLiteral( "  %1=%2" ).arg( param.name, param.value ) );
+        log( QStringLiteral( "  %1=%2" ).arg( QString( param.name ), QString( param.value ) ) );
     }
 
     // Clear request token
