@@ -63,7 +63,7 @@ jobs:
             --form project=qgis%2Fo2 \
             --form token=$TOKEN \
             --form email=nyall.dawson@gmail.com \
-            --form file=o2.tgz \
+            --form file=@o2.tgz \
             --form version=master \
             --form description="`git rev-parse --abbrev-ref HEAD` `git rev-parse --short HEAD`" \
             https://scan.coverity.com/builds?project=qgis%2Fo2
