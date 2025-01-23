@@ -37,6 +37,7 @@ scan-build -o scanbuildoutput -plist -v cmake -Do2_BUILD_EXAMPLES:BOOL=ON \
     -Do2_WITH_SMUGMUG:BOOL=ON \
     -Do2_WITH_SPOTIFY:BOOL=ON \
     -Do2_WITH_SURVEYMONKEY:BOOL=ON \
+    -Do2_WITH_TWITTER:BOOL=ON \
     -Do2_WITH_UBER:BOOL=ON \
     -Do2_WITH_VIMEO:BOOL=ON \
     ..

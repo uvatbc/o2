@@ -8,6 +8,10 @@ if(o2_WITH_GOOGLE)
     add_subdirectory(youtubedemo)
 endif(o2_WITH_GOOGLE)
 
+if(o2_WITH_TWITTER)
+    add_subdirectory(twitterdemo)
+endif(o2_WITH_TWITTER)
+
 #if(o2_WITH_SPOTIFY)
 #    add_subdirectory(spotifydemo)
 #endif(o2_WITH_SPOTIFY)
